@@ -1,0 +1,38 @@
+# Build output
+build/
+cmake-build-*/
+bin/
+out/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+Testing/
+
+# Compiled files
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.exe
+*.out
+*.dSYM/
+
+# CLion/JetBrains project settings
+.idea/
+
+# Temporary/editor files
+*.swp
+*.swo
+*.log
+
+# macOS
+.DS_Store
+
+# Crash dumps
+core
+core.*
