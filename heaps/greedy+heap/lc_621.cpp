@@ -1,0 +1,105 @@
+//621. Task Scheduler
+
+struct cmp {
+    bool operator()(const pair<int, char>&a, const pair<int, char>&b) const{
+        if(a.first != b.first) return (a.first < b.first);
+        return (a.second < b.second);
+    }
+};
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
+        int s = tasks.size();
+        unordered_map<char, int> hm;
+        for(int i = 0; i < s; i++){
+            hm[tasks[i]]++;
+        }
+        priority_queue<pair<int, char>, vector<pair<int, char>>, cmp> pq;
+        for(auto i : hm){
+            int freq = i.second;
+            char task = i.first;
+            pq.push({freq, task});
+        }
+        int totalTime = 0;
+        while(!pq.empty()){
+            int roundSize = n + 1;
+            int slotsInRound = roundSize;
+            int tasksExecutedInRound = 0;
+
+            vector<pair<int, char>> currRoundTasks;
+            while(slotsInRound > 0 && !pq.empty()){
+                pair<int, char> task = pq.top(); pq.pop();
+
+                slotsInRound--;
+                tasksExecutedInRound++;
+
+                task.first--;
+                currRoundTasks.push_back(task);
+            }
+            for(auto task : currRoundTasks){
+                if(task.first > 0){
+                    pq.push(task);
+                }
+            }
+
+            if(pq.empty()){
+                totalTime += tasksExecutedInRound;
+            }else{
+                totalTime += roundSize;
+            }
+        }
+        return totalTime;
+    }
+};
+
+/*
+ * ============================================================================
+ * FLOWCHART
+ * ============================================================================
+ *
+ *                 +--------------------------------------+
+ *                 | Count Task Frequencies -> Max-Heap   |
+ *                 +--------------------------------------+
+ *                                    |
+ *                                    v
+ *                 +--------------------------------------+ <---------+
+ *                 | While Heap is NOT empty:             |           |
+ *                 | Open a new round of (n + 1) slots    |           |
+ *                 +--------------------------------------+           |
+ *                                    |                               |
+ *                                    v                               |
+ *                 +--------------------------------------+           |
+ *                 |  Pop up to (n + 1) distinct tasks    |           |
+ *                 |  from Heap:                          |           |
+ *                 |  - Decrement frequency (task.first--) |          |
+ *                 |  - Store in 'temp' list              |           |
+ *                 |  - Track 'tasksExecuted++'           |           |
+ *                 +--------------------------------------+           |
+ *                                    |                               |
+ *                                    v                               |
+ *                 +--------------------------------------+           |
+ *                 |  Push tasks from 'temp' list back    |           |
+ *                 |  into Heap (ONLY if task.first > 0)  |           |
+ *                 +--------------------------------------+           |
+ *                                    |                               |
+ *                            [ Is Heap empty? ]                      |
+ *                               /          \                         |
+ *                       (Yes)  /            \ (No)                   |
+ *                             v              v                       |
+ *                  +-------------+  +--------------------------------+
+ *                  | Add ONLY    |  | Add full (n + 1) round size    |
+ *                  | tasksExecuted| (Includes tasks + idle slots)    |
+ *                  +-------------+  +--------------------------------+
+ *                             \              /                       |
+ *                              v            v                        |
+ *                      +-----------------------------+               |
+ *                      |       totalTime += X        |---------------+
+ *                      +-----------------------------+
+ *                                    |
+ *                          (Loop breaks when empty)
+ *                                    v
+ *                      +-----------------------------+
+ *                      |      Return totalTime       |
+ *                      +-----------------------------+
+ * ============================================================================
+ */
