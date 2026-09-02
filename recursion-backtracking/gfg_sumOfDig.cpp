@@ -1,4 +1,4 @@
-//Sum Of Digits
+//gfg_Sum Of Digits
 
 class Solution {
 public:
