@@ -18,3 +18,33 @@ public:
         return doDp(i, n);
     }
 };
+
+////wth dp tabulation
+ class Solution {
+ public:
+     int climbStairs(int n) {
+         vector<int> dp(n+2);
+         dp[n] = 1;
+         dp[n+1] = 0;
+         for(int i = n - 1; i >=0; i--){
+             dp[i] = dp[i + 1] + dp[i+2];
+         }
+         return dp[0];
+     }
+ };
+
+//via dp tabulation with space optimzation
+class Solution {
+public:
+    int climbStairs(int n) {
+        int age = 1;
+        int ageAge = 0;
+        int ans = 0;
+        for(int i = n - 1; i >=0; i--){
+            ans = age + ageAge;
+            ageAge = age;
+            age = ans;
+        }
+        return ans;
+    }
+};
